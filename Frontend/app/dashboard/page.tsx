@@ -41,7 +41,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
-          <Button size="icon" variant="outline" aria-label="Profile">
+          <Button size="icon" variant="outline" aria-label="Profile" onClick={() => window.location.href = '/profile'}>
             <User className="h-4 w-4" />
           </Button>
         </div>

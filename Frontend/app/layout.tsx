@@ -11,9 +11,9 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 const _devanagari = Noto_Sans_Devanagari({ subsets: ["latin", "devanagari"] })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.app",
+  title: "FinAI - Personal Finance Management",
+  description: "AI-powered personal finance management application",
+  generator: "Next.js",
 }
 
 export default function RootLayout({

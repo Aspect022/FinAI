@@ -96,7 +96,7 @@ export default function DashboardClient() {
         </div>
         <div className="flex items-center gap-2">
           <LanguageToggle language={language} onToggle={() => setLanguage((l) => (l === "en" ? "hi" : "en"))} />
-          <Button size="icon" variant="outline" aria-label="Profile">
+          <Button size="icon" variant="outline" aria-label="Profile" onClick={() => window.location.href = '/profile'}>
             <User className="h-4 w-4" />
           </Button>
         </div>

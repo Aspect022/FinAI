@@ -1,30 +1,28 @@
-# finaionboardingform
+# FinAI - Personal Finance Management
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+FinAI is an AI-powered personal finance management application that helps users track expenses, plan investments, and achieve financial goals.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/jayeshrl2005-gmailcoms-projects/v0-finaionboardingform)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/WW0SdjzZYHa)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://finai.vercel.app)
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+FinAI provides users with comprehensive financial management tools including expense tracking, investment recommendations, financial health analysis, and personalized planning.
 
-## Deployment
+## Features
 
-Your project is live at:
+- Expense and income tracking
+- Investment recommendations based on risk profile
+- Financial health monitoring
+- Educational content on financial literacy
+- Personalized financial planning
+- Multi-language support (English and Hindi)
 
-**[https://vercel.com/jayeshrl2005-gmailcoms-projects/v0-finaionboardingform](https://vercel.com/jayeshrl2005-gmailcoms-projects/v0-finaionboardingform)**
+## Development
 
-## Build your app
+1. Clone the repository
+2. Install dependencies with `npm install`
+3. Run the development server with `npm run dev`
 
-Continue building your app on:
+## API Endpoints
 
-**[https://v0.app/chat/projects/WW0SdjzZYHa](https://v0.app/chat/projects/WW0SdjzZYHa)**
-
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+The application uses a backend API for user profile management, transaction tracking, and financial recommendations.

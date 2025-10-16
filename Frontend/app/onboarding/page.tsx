@@ -11,7 +11,7 @@ import { StepBasic } from "@/components/onboarding/step-1-basic"
 import { StepIncomeType, type IncomeType } from "@/components/onboarding/step-2-income-type"
 import { StepIncomeSlider } from "@/components/onboarding/step-3-income-slider"
 import { StepRisk, type RiskLevel } from "@/components/onboarding/step-4-risk"
-import { GoalsSelector } from "@/components/onboarding/goals-selector"
+import { ProfileDetailsComponent, type ProfileDetails } from "@/components/onboarding/profile-details"
 import { setAppLanguage } from "@/components/i18n/translation-provider"
 
 type Lang = "en" | "hi"
@@ -23,13 +23,41 @@ const tDict: Record<Lang, Record<string, string>> = {
     continue: "Continue",
     back: "Back",
     step1_title: "Basic Details",
+    step2_title: "Profile Details",
+    step3_title: "Monthly Income",
+    step4_title: "Risk Tolerance",
     name: "Full Name",
     age: "Age",
     name_placeholder: "Enter your name",
     age_placeholder: "Enter your age",
-    step2_title: "Income Type",
-    step3_title: "Monthly Income",
-    step4_title: "Risk Tolerance",
+    occupation: "Occupation",
+    occupation_placeholder: "e.g., Software Engineer",
+    location: "Location",
+    location_placeholder: "City, State",
+    maritalStatus: "Marital Status",
+    maritalStatus_placeholder: "Select status",
+    maritalStatus_single: "Single",
+    maritalStatus_married: "Married",
+    maritalStatus_divorced: "Divorced",
+    maritalStatus_widowed: "Widowed",
+    dependents: "Number of Dependents",
+    dependents_placeholder: "0",
+    financialGoals: "Financial Goals",
+    financialGoals_placeholder: "e.g., Retirement, House, Education",
+    investmentExperience: "Investment Experience",
+    investmentExperience_placeholder: "Select experience level",
+    investmentExperience_none: "No Experience",
+    investmentExperience_beginner: "Beginner",
+    investmentExperience_intermediate: "Intermediate",
+    investmentExperience_advanced: "Advanced",
+    email: "Email Address",
+    email_placeholder: "your.email@example.com",
+    phone: "Phone Number",
+    phone_placeholder: "+91 XXXXX XXXXX",
+    emergencyContactName: "Emergency Contact Name",
+    emergencyContactName_placeholder: "Full name",
+    emergencyContactPhone: "Emergency Contact Phone",
+    emergencyContactPhone_placeholder: "+91 XXXXX XXXXX",
     risk_conservative: "Conservative",
     risk_moderate: "Moderate",
     risk_aggressive: "Aggressive",
@@ -42,12 +70,19 @@ const tDict: Record<Lang, Record<string, string>> = {
     err_risk_required: "Please choose a risk level.",
     // progress
     p1: "Basics",
-    p2: "Income Type",
-    p3: "Monthly Income",
-    p4: "Risk",
+    p2: "Profile",
+    p3: "Income Type",
+    p4: "Monthly Income",
+    p5: "Risk",
     risk_conservative_desc: "Lower risk, steady growth",
     risk_moderate_desc: "Balanced risk and return",
     risk_aggressive_desc: "Higher risk, higher potential",
+    profile_title: "Profile Settings",
+    profile_subtitle: "Manage your personal and financial information",
+    personal_info: "Personal Information",
+    cancel: "Cancel",
+    save_changes: "Save Changes",
+    saving: "Saving...",
   },
   hi: {
     title: "FinAI ऑनबोर्डिंग",
@@ -55,13 +90,41 @@ const tDict: Record<Lang, Record<string, string>> = {
     continue: "आगे बढ़ें",
     back: "वापस",
     step1_title: "मूल विवरण",
+    step2_title: "प्रोफ़ाइल विवरण",
+    step3_title: "मासिक आय",
+    step4_title: "जोखिम सहनशीलता",
     name: "पूरा नाम",
     age: "उम्र",
     name_placeholder: "अपना नाम लिखें",
     age_placeholder: "अपनी उम्र लिखें",
-    step2_title: "आय का प्रकार",
-    step3_title: "मासिक आय",
-    step4_title: "जोखिम सहनशीलता",
+    occupation: "व्यवसाय",
+    occupation_placeholder: "उदाहरण: सॉफ्टवेयर इंजीनियर",
+    location: "स्थान",
+    location_placeholder: "शहर, राज्य",
+    maritalStatus: "वैवाहिक स्थिति",
+    maritalStatus_placeholder: "स्थिति चुनें",
+    maritalStatus_single: "अविवाहित",
+    maritalStatus_married: "विवाहित",
+    maritalStatus_divorced: "तलाकशुदा",
+    maritalStatus_widowed: "विधवा",
+    dependents: "परिवार के सदस्य",
+    dependents_placeholder: "0",
+    financialGoals: "वित्तीय लक्ष्य",
+    financialGoals_placeholder: "उदाहरण: सेवानिवृत्ति, घर, शिक्षा",
+    investmentExperience: "निवेश अनुभव",
+    investmentExperience_placeholder: "अनुभव स्तर चुनें",
+    investmentExperience_none: "कोई अनुभव नहीं",
+    investmentExperience_beginner: "शुरुआतकर्ता",
+    investmentExperience_intermediate: "मध्यम",
+    investmentExperience_advanced: "उन्नत",
+    email: "ईमेल पता",
+    email_placeholder: "your.email@example.com",
+    phone: "फ़ोन नंबर",
+    phone_placeholder: "+91 XXXXX XXXXX",
+    emergencyContactName: "आपातकालीन संपर्क नाम",
+    emergencyContactName_placeholder: "पूरा नाम",
+    emergencyContactPhone: "आपातकालीन संपर्क फ़ोन",
+    emergencyContactPhone_placeholder: "+91 XXXXX XXXXX",
     risk_conservative: "सुरक्षित",
     risk_moderate: "मध्यम",
     risk_aggressive: "आक्रामक",
@@ -74,12 +137,19 @@ const tDict: Record<Lang, Record<string, string>> = {
     err_risk_required: "कृपया एक जोखिम स्तर चुनें.",
     // progress
     p1: "बुनियादी",
-    p2: "आय प्रकार",
-    p3: "मासिक आय",
-    p4: "जोखिम",
+    p2: "प्रोफ़ाइल",
+    p3: "आय प्रकार",
+    p4: "मासिक आय",
+    p5: "जोखिम",
     risk_conservative_desc: "कम जोखिम, स्थिर वृद्धि",
     risk_moderate_desc: "संतुलित जोखिम और रिटर्न",
     risk_aggressive_desc: "उच्च जोखिम, अधिक संभावित",
+    profile_title: "प्रोफ़ाइल सेटिंग्स",
+    profile_subtitle: "अपनी व्यक्तिगत और वित्तीय जानकारी प्रबंधित करें",
+    personal_info: "व्यक्तिगत जानकारी",
+    cancel: "रद्द करें",
+    save_changes: "परिवर्तन सहेजें",
+    saving: "सहेजा जा रहा है...",
   },
 }
 
@@ -98,11 +168,22 @@ export default function OnboardingPage() {
   const [incomeType, setIncomeType] = useState<IncomeType | "">("")
   const [income, setIncome] = useState<number>(25000)
   const [risk, setRisk] = useState<RiskLevel | "">("")
-  const [goals, setGoals] = useState<Record<string, { amount?: string; timeline?: string }>>({})
+  const [profileDetails, setProfileDetails] = useState<ProfileDetails>({
+    occupation: "",
+    location: "",
+    maritalStatus: "",
+    dependents: "",
+    financialGoals: "",
+    investmentExperience: "",
+    email: "",
+    phone: "",
+    emergencyContactName: "",
+    emergencyContactPhone: "",
+  })
 
   const [error, setError] = useState<string>("")
 
-  const steps = useMemo(() => [t.p1, t.p2, t.p3, t.p4], [t])
+  const steps = useMemo(() => [t.p1, t.p2, t.p3, t.p4, t.p5], [t])
 
   function validateCurrentStep(): boolean {
     // Clear previous
@@ -122,20 +203,25 @@ export default function OnboardingPage() {
       return true
     }
     if (step === 2) {
+      // Profile details validation - we'll keep it simple for now
+      // Could add more detailed validation as needed
+      return true
+    }
+    if (step === 3) {
       if (!incomeType) {
         setError(t.err_incomeType_required)
         return false
       }
       return true
     }
-    if (step === 3) {
+    if (step === 4) {
       if (!(income >= 5000 && income <= 100000)) {
         setError(t.err_income_required)
         return false
       }
       return true
     }
-    if (step === 4) {
+    if (step === 5) {
       if (!risk) {
         setError(t.err_risk_required)
         return false
@@ -147,7 +233,7 @@ export default function OnboardingPage() {
 
   function onContinue() {
     if (!validateCurrentStep()) return
-    if (step < 4) {
+    if (step < 5) {
       setStep((s) => s + 1)
       return
     }
@@ -210,22 +296,26 @@ export default function OnboardingPage() {
 
               {step === 2 && (
                 <div>
-                  <div className="mb-4">
-                    <GoalsSelector showActions={false} onChange={setGoals} />
-                  </div>
                   <h2 className="text-xl font-medium mb-3">{t.step2_title}</h2>
-                  <StepIncomeType language={language} value={incomeType || ""} onChange={setIncomeType} />
+                  <ProfileDetailsComponent t={t} values={profileDetails} onChange={setProfileDetails} />
                 </div>
               )}
 
               {step === 3 && (
                 <div>
                   <h2 className="text-xl font-medium mb-3">{t.step3_title}</h2>
-                  <StepIncomeSlider hint={t.currency_hint} value={income} onChange={setIncome} />
+                  <StepIncomeType language={language} value={incomeType || ""} onChange={setIncomeType} />
                 </div>
               )}
 
               {step === 4 && (
+                <div>
+                  <h2 className="text-xl font-medium mb-3">{t.step4_title}</h2>
+                  <StepIncomeSlider hint={t.currency_hint} value={income} onChange={setIncome} />
+                </div>
+              )}
+
+              {step === 5 && (
                 <div>
                   <h2 className="text-xl font-medium mb-3">{t.step4_title}</h2>
                   <StepRisk t={t} value={risk || ""} onChange={setRisk} />
