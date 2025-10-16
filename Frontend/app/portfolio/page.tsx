@@ -3,6 +3,7 @@
 import useSWR from "swr"
 import dynamic from "next/dynamic"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { useTranslation } from "@/components/i18n/translation-provider"
 import { InvestmentCard } from "@/components/portfolio/investment-card"
 import { TrendingUp } from "lucide-react"
@@ -18,7 +19,7 @@ const LineChart = dynamic(() => import("recharts").then((m) => m.LineChart), { s
 const Line = dynamic(() => import("recharts").then((m) => m.Line), { ssr: false })
 const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), { ssr: false })
 
-const COLORS = ["#0ea5e9", "#22c55e", "#f59e0b", "#ef4444", "#6366f1"]
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#84cc16", "#6366f1"]
 
 export default function PortfolioPage() {
   const { t } = useTranslation()
@@ -62,22 +63,57 @@ export default function PortfolioPage() {
             <CardTitle className="text-sm">Asset Allocation</CardTitle>
           </CardHeader>
           <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie dataKey="value" nameKey="name" data={data?.allocation ?? []} outerRadius={100} label>
-                  {(data?.allocation ?? []).map((_: any, idx: number) => (
-                    <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-            <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+            <ChartContainer
+              config={{
+                value: {
+                  label: "Allocation",
+                },
+                ...(data?.allocation ?? []).reduce((acc: any, item: any, idx: number) => {
+                  acc[item.name] = {
+                    label: item.name,
+                    color: COLORS[idx % COLORS.length],
+                  };
+                  return acc;
+                }, {}),
+              }}
+              className="h-full w-full"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie 
+                    dataKey="value" 
+                    nameKey="name" 
+                    data={data?.allocation ?? []} 
+                    outerRadius={100} 
+                    innerRadius={60} 
+                    paddingAngle={2}
+                    label
+                  >
+                    {(data?.allocation ?? []).map((_: any, idx: number) => (
+                      <Cell 
+                        key={idx} 
+                        fill={COLORS[idx % COLORS.length]} 
+                        stroke="hsl(var(--background))"
+                        strokeWidth={2}
+                      />
+                    ))}
+                  </Pie>
+                  <ChartTooltip 
+                    content={<ChartTooltipContent hideLabel />}
+                    formatter={(value) => [`${value}%`, 'Allocation']}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+            <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
               {(data?.allocation ?? []).map((a: any, i: number) => (
                 <div key={a.name} className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-sm" style={{ backgroundColor: COLORS[i % COLORS.length] }} />
-                  <span>{a.name}</span>
-                  <span className="ml-auto font-medium text-foreground">{a.value}%</span>
+                  <span 
+                    className="h-3 w-3 rounded-full" 
+                    style={{ backgroundColor: COLORS[i % COLORS.length] }} 
+                  />
+                  <span className="text-muted-foreground flex-1 truncate">{a.name}</span>
+                  <span className="font-medium text-foreground">{a.value}%</span>
                 </div>
               ))}
             </div>
