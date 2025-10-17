@@ -46,7 +46,7 @@ export function FinancialHealthCard() {
             <div
               className="h-full w-full rounded-full"
               style={{
-                background: "conic-gradient(var(--chart-2) calc(72*1%), #e5e7eb 0)",
+                background: "conic-gradient(var(--chart-2) calc(72*1%), var(--muted) 0)",
               }}
               aria-label="Health score"
             />

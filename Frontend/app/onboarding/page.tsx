@@ -1,24 +1,30 @@
-"use client"
+"use client";
 
-import { useMemo, useState } from "react"
-import { useRouter } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ProgressSteps } from "@/components/onboarding/progress"
-import { LanguageToggle } from "@/components/onboarding/language-toggle"
-import { StepBasic } from "@/components/onboarding/step-1-basic"
-import { StepIncomeType, type IncomeType } from "@/components/onboarding/step-2-income-type"
-import { StepIncomeSlider } from "@/components/onboarding/step-3-income-slider"
-import { StepRisk, type RiskLevel } from "@/components/onboarding/step-4-risk"
-import { ProfileDetailsComponent, type ProfileDetails } from "@/components/onboarding/profile-details"
-import { setAppLanguage } from "@/components/i18n/translation-provider"
+import { useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ProgressSteps } from "@/components/onboarding/progress";
+import { LanguageToggle } from "@/components/onboarding/language-toggle";
+import { StepBasic } from "@/components/onboarding/step-1-basic";
+import {
+  StepIncomeType,
+  type IncomeType,
+} from "@/components/onboarding/step-2-income-type";
+import { StepIncomeSlider } from "@/components/onboarding/step-3-income-slider";
+import { StepRisk, type RiskLevel } from "@/components/onboarding/step-4-risk";
+import {
+  ProfileDetailsComponent,
+  type ProfileDetails,
+} from "@/components/onboarding/profile-details";
+import { setAppLanguage } from "@/components/i18n/translation-provider";
 
-type Lang = "en" | "hi"
+type Lang = "en" | "hi";
 
 const tDict: Record<Lang, Record<string, string>> = {
   en: {
-    title: "FinAI Onboarding",
+    title: "MoneyFyi Onboarding",
     subtitle: "Tell us about yourself to personalize your financial plan.",
     continue: "Continue",
     back: "Back",
@@ -85,8 +91,9 @@ const tDict: Record<Lang, Record<string, string>> = {
     saving: "Saving...",
   },
   hi: {
-    title: "FinAI ऑनबोर्डिंग",
-    subtitle: "अपनी जानकारी दें ताकि हम आपकी वित्तीय योजना को व्यक्तिगत बना सकें।",
+    title: "MoneyFyi ऑनबोर्डिंग",
+    subtitle:
+      "अपनी जानकारी दें ताकि हम आपकी वित्तीय योजना को व्यक्तिगत बना सकें।",
     continue: "आगे बढ़ें",
     back: "वापस",
     step1_title: "मूल विवरण",
@@ -151,23 +158,33 @@ const tDict: Record<Lang, Record<string, string>> = {
     save_changes: "परिवर्तन सहेजें",
     saving: "सहेजा जा रहा है...",
   },
-}
+};
 
 function formatINR(n: number) {
-  return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(n)
+  return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(n);
 }
 
 export default function OnboardingPage() {
-  const router = useRouter()
-  const [language, setLanguage] = useState<Lang>("en")
-  const t = useMemo(() => tDict[language], [language])
+  const router = useRouter();
+  const [language, setLanguage] = useState<Lang>("en");
+  const [mounted, setMounted] = useState(false);
 
-  const [step, setStep] = useState<number>(1)
-  const [name, setName] = useState<string>("")
-  const [age, setAge] = useState<number | "">("")
-  const [incomeType, setIncomeType] = useState<IncomeType | "">("")
-  const [income, setIncome] = useState<number>(25000)
-  const [risk, setRisk] = useState<RiskLevel | "">("")
+  useEffect(() => {
+    setMounted(true);
+    const savedLang = typeof window !== 'undefined' ? localStorage.getItem('lang') as Lang | null : null;
+    if (savedLang && (savedLang === 'en' || savedLang === 'hi')) {
+      setLanguage(savedLang);
+    }
+  }, []);
+
+  const t = useMemo(() => tDict[language], [language]);
+
+  const [step, setStep] = useState<number>(1);
+  const [name, setName] = useState<string>("");
+  const [age, setAge] = useState<number | "">("");
+  const [incomeType, setIncomeType] = useState<IncomeType | "">("");
+  const [income, setIncome] = useState<number>(25000);
+  const [risk, setRisk] = useState<RiskLevel | "">("");
   const [profileDetails, setProfileDetails] = useState<ProfileDetails>({
     occupation: "",
     location: "",
@@ -179,73 +196,102 @@ export default function OnboardingPage() {
     phone: "",
     emergencyContactName: "",
     emergencyContactPhone: "",
-  })
+  });
 
-  const [error, setError] = useState<string>("")
+  const [error, setError] = useState<string>("");
 
-  const steps = useMemo(() => [t.p1, t.p2, t.p3, t.p4, t.p5], [t])
+  const steps = useMemo(() => [t.p1, t.p2, t.p3, t.p4, t.p5], [t]);
 
   function validateCurrentStep(): boolean {
     // Clear previous
-    setError("")
+    setError("");
     if (step === 1) {
-      const nameOK = typeof name === "string" && name.trim().length >= 2 && name.trim().length <= 50
-      const ageNum = typeof age === "number" ? age : Number.parseInt(String(age || ""), 10)
-      const ageOK = Number.isFinite(ageNum) && ageNum >= 18 && ageNum <= 70
+      const nameOK =
+        typeof name === "string" &&
+        name.trim().length >= 2 &&
+        name.trim().length <= 50;
+      const ageNum =
+        typeof age === "number" ? age : Number.parseInt(String(age || ""), 10);
+      const ageOK = Number.isFinite(ageNum) && ageNum >= 18 && ageNum <= 70;
       if (!nameOK) {
-        setError(t.err_name_required)
-        return false
+        setError(t.err_name_required);
+        return false;
       }
       if (!ageOK) {
-        setError(t.err_age_required)
-        return false
+        setError(t.err_age_required);
+        return false;
       }
-      return true
+      return true;
     }
     if (step === 2) {
       // Profile details validation - we'll keep it simple for now
       // Could add more detailed validation as needed
-      return true
+      return true;
     }
     if (step === 3) {
       if (!incomeType) {
-        setError(t.err_incomeType_required)
-        return false
+        setError(t.err_incomeType_required);
+        return false;
       }
-      return true
+      return true;
     }
     if (step === 4) {
       if (!(income >= 5000 && income <= 100000)) {
-        setError(t.err_income_required)
-        return false
+        setError(t.err_income_required);
+        return false;
       }
-      return true
+      return true;
     }
     if (step === 5) {
       if (!risk) {
-        setError(t.err_risk_required)
-        return false
+        setError(t.err_risk_required);
+        return false;
       }
-      return true
+      return true;
     }
-    return true
+    return true;
   }
 
   function onContinue() {
-    if (!validateCurrentStep()) return
+    if (!validateCurrentStep()) return;
     if (step < 5) {
-      setStep((s) => s + 1)
-      return
+      setStep((s) => s + 1);
+      return;
     }
     try {
-      localStorage.setItem("onboarded", "1")
+      localStorage.setItem("onboarded", "1");
     } catch {}
-    router.push("/dashboard")
+    router.push("/dashboard");
   }
 
   function onBack() {
-    setError("")
-    if (step > 1) setStep((s) => s - 1)
+    setError("");
+    if (step > 1) setStep((s) => s - 1);
+  }
+
+  if (!mounted) {
+    return (
+      <div className="min-h-[100svh] flex flex-col">
+        <header className="w-full border-b bg-card">
+          <div className="mx-auto w-full max-w-screen-sm px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <img
+                src="/logo.png"
+                alt="MoneyFyi Logo"
+                width={32}
+                height={32}
+                className="h-8 w-8 object-contain rounded-full"
+              />
+              <span className="font-semibold text-lg">MoneyFyi</span>
+            </div>
+            <div className="h-8 w-8 rounded-md bg-muted animate-pulse" />
+          </div>
+        </header>
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-lg">Loading...</div>
+        </main>
+      </div>
+    );
   }
 
   return (
@@ -253,18 +299,24 @@ export default function OnboardingPage() {
       <header className="w-full border-b bg-card">
         <div className="mx-auto w-full max-w-screen-sm px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-md bg-primary" aria-hidden="true" />
-            <span className="font-semibold text-lg">FinAI</span>
+            <img
+              src="/logo.png"
+              alt="MoneyFyi Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 object-contain rounded-full"
+            />
+            <span className="font-semibold text-lg">MoneyFyi</span>
           </div>
           <LanguageToggle
             language={language}
             onToggle={() => {
-              const next = language === "en" ? "hi" : "en"
-              setLanguage(next)
+              const next = language === "en" ? "hi" : "en";
+              setLanguage(next);
               try {
-                localStorage.setItem("lang", next)
+                localStorage.setItem("lang", next);
               } catch {}
-              setAppLanguage(next)
+              setAppLanguage(next);
             }}
           />
         </div>
@@ -278,40 +330,63 @@ export default function OnboardingPage() {
 
           <div className="mb-2">
             <h1 className="text-balance text-2xl font-semibold">{t.title}</h1>
-            <p className="text-muted-foreground leading-relaxed">{t.subtitle}</p>
+            <p className="text-muted-foreground leading-relaxed">
+              {t.subtitle}
+            </p>
           </div>
 
           <Card className="mt-4">
             <CardContent className="p-4 md:p-6">
-              <div aria-live="polite" className={cn("text-destructive mb-3", !error && "sr-only")}>
+              <div
+                aria-live="polite"
+                className={cn("text-destructive mb-3", !error && "sr-only")}
+              >
                 {error || "."}
               </div>
 
               {step === 1 && (
                 <div>
                   <h2 className="text-xl font-medium mb-3">{t.step1_title}</h2>
-                  <StepBasic t={t} name={name} age={age} onChangeName={setName} onChangeAge={setAge} />
+                  <StepBasic
+                    t={t}
+                    name={name}
+                    age={age}
+                    onChangeName={setName}
+                    onChangeAge={setAge}
+                  />
                 </div>
               )}
 
               {step === 2 && (
                 <div>
                   <h2 className="text-xl font-medium mb-3">{t.step2_title}</h2>
-                  <ProfileDetailsComponent t={t} values={profileDetails} onChange={setProfileDetails} />
+                  <ProfileDetailsComponent
+                    t={t}
+                    values={profileDetails}
+                    onChange={setProfileDetails}
+                  />
                 </div>
               )}
 
               {step === 3 && (
                 <div>
                   <h2 className="text-xl font-medium mb-3">{t.step3_title}</h2>
-                  <StepIncomeType language={language} value={incomeType || ""} onChange={setIncomeType} />
+                  <StepIncomeType
+                    language={language}
+                    value={incomeType || ""}
+                    onChange={setIncomeType}
+                  />
                 </div>
               )}
 
               {step === 4 && (
                 <div>
                   <h2 className="text-xl font-medium mb-3">{t.step4_title}</h2>
-                  <StepIncomeSlider hint={t.currency_hint} value={income} onChange={setIncome} />
+                  <StepIncomeSlider
+                    hint={t.currency_hint}
+                    value={income}
+                    onChange={setIncome}
+                  />
                 </div>
               )}
 
@@ -323,7 +398,12 @@ export default function OnboardingPage() {
               )}
 
               <div className="mt-6 flex items-center justify-between">
-                <Button type="button" variant="secondary" onClick={onBack} disabled={step === 1}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={onBack}
+                  disabled={step === 1}
+                >
                   {t.back}
                 </Button>
                 <Button type="button" onClick={onContinue}>
@@ -335,5 +415,5 @@ export default function OnboardingPage() {
         </section>
       </main>
     </div>
-  )
+  );
 }

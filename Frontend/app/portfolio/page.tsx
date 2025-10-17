@@ -1,40 +1,81 @@
-"use client"
+"use client";
 
-import useSWR from "swr"
-import dynamic from "next/dynamic"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { useTranslation } from "@/components/i18n/translation-provider"
-import { InvestmentCard } from "@/components/portfolio/investment-card"
-import { TrendingUp } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import useSWR from "swr";
+import dynamic from "next/dynamic";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { useTranslation } from "@/components/i18n/translation-provider";
+import { InvestmentCard } from "@/components/portfolio/investment-card";
+import { TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json())
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
-const ResponsiveContainer = dynamic(() => import("recharts").then((m) => m.ResponsiveContainer), { ssr: false })
-const PieChart = dynamic(() => import("recharts").then((m) => m.PieChart), { ssr: false })
-const Pie = dynamic(() => import("recharts").then((m) => m.Pie), { ssr: false })
-const Cell = dynamic(() => import("recharts").then((m) => m.Cell), { ssr: false })
-const LineChart = dynamic(() => import("recharts").then((m) => m.LineChart), { ssr: false })
-const Line = dynamic(() => import("recharts").then((m) => m.Line), { ssr: false })
-const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), { ssr: false })
+const ResponsiveContainer = dynamic(
+  () => import("recharts").then((m) => m.ResponsiveContainer),
+  { ssr: false }
+);
+const PieChart = dynamic(() => import("recharts").then((m) => m.PieChart), {
+  ssr: false,
+});
+const Pie = dynamic(() => import("recharts").then((m) => m.Pie), {
+  ssr: false,
+});
+const Cell = dynamic(() => import("recharts").then((m) => m.Cell), {
+  ssr: false,
+});
+const LineChart = dynamic(() => import("recharts").then((m) => m.LineChart), {
+  ssr: false,
+});
+const Line = dynamic(() => import("recharts").then((m) => m.Line), {
+  ssr: false,
+});
+const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), {
+  ssr: false,
+});
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#f97316", "#84cc16", "#6366f1"]
+const COLORS = [
+  "#D4F6FF",
+  "#FFFBDE",
+  "#D4F6FF",
+  "#FFFBDE",
+  "#D4F6FF",
+  "#FFFBDE",
+  "#D4F6FF",
+  "#FFFBDE",
+  "#D4F6FF",
+  "#FFFBDE",
+];
 
 export default function PortfolioPage() {
-  const { t } = useTranslation()
-  const { data } = useSWR("/api/portfolio", fetcher)
+  const { t } = useTranslation();
+  const { data } = useSWR("/api/portfolio", fetcher);
 
   return (
     <main className="p-4 md:p-6 space-y-6">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{t("portfolio")}</h1>
+        <div className="flex items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="MoneyFyi Logo"
+            width={28}
+            height={28}
+            className="h-7 w-7 object-contain rounded-full"
+          />
+          <h1 className="text-2xl font-semibold">{t("portfolio")}</h1>
+        </div>
       </header>
 
       <section className="grid grid-cols-1 gap-4">
         <Card className="bg-card/60 border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground">Total Portfolio Value</CardTitle>
+            <CardTitle className="text-sm text-muted-foreground">
+              Total Portfolio Value
+            </CardTitle>
           </CardHeader>
           <CardContent className="flex items-end justify-between">
             <div>
@@ -42,11 +83,18 @@ export default function PortfolioPage() {
                 ₹{(data?.totalPortfolio ?? 0).toLocaleString("en-IN")}
               </div>
               <div
-                className={`mt-1 flex items-center gap-1 text-sm ${data?.todaysChange?.direction === "down" ? "text-red-500" : "text-[var(--chart-2)]"}`}
+                className={`mt-1 flex items-center gap-1 text-sm ${
+                  data?.todaysChange?.direction === "down"
+                    ? "text-red-500"
+                    : "text-[var(--chart-2)]"
+                }`}
               >
                 <TrendingUp className="h-4 w-4" />
-                +₹{data?.todaysChange?.amount?.toLocaleString("en-IN")} ({data?.todaysChange?.percent}%)
-                <span className="text-muted-foreground text-xs ml-1">Today</span>
+                +₹{data?.todaysChange?.amount?.toLocaleString("en-IN")} (
+                {data?.todaysChange?.percent}%)
+                <span className="text-muted-foreground text-xs ml-1">
+                  Today
+                </span>
               </div>
             </div>
             <div className="flex gap-2">
@@ -68,39 +116,42 @@ export default function PortfolioPage() {
                 value: {
                   label: "Allocation",
                 },
-                ...(data?.allocation ?? []).reduce((acc: any, item: any, idx: number) => {
-                  acc[item.name] = {
-                    label: item.name,
-                    color: COLORS[idx % COLORS.length],
-                  };
-                  return acc;
-                }, {}),
+                ...(data?.allocation ?? []).reduce(
+                  (acc: any, item: any, idx: number) => {
+                    acc[item.name] = {
+                      label: item.name,
+                      color: COLORS[idx % COLORS.length],
+                    };
+                    return acc;
+                  },
+                  {}
+                ),
               }}
               className="h-full w-full"
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie 
-                    dataKey="value" 
-                    nameKey="name" 
-                    data={data?.allocation ?? []} 
-                    outerRadius={100} 
-                    innerRadius={60} 
+                  <Pie
+                    dataKey="value"
+                    nameKey="name"
+                    data={data?.allocation ?? []}
+                    outerRadius={100}
+                    innerRadius={60}
                     paddingAngle={2}
                     label
                   >
                     {(data?.allocation ?? []).map((_: any, idx: number) => (
-                      <Cell 
-                        key={idx} 
-                        fill={COLORS[idx % COLORS.length]} 
+                      <Cell
+                        key={idx}
+                        fill={COLORS[idx % COLORS.length]}
                         stroke="hsl(var(--background))"
                         strokeWidth={2}
                       />
                     ))}
                   </Pie>
-                  <ChartTooltip 
+                  <ChartTooltip
                     content={<ChartTooltipContent hideLabel />}
-                    formatter={(value) => [`${value}%`, 'Allocation']}
+                    formatter={(value) => [`${value}%`, "Allocation"]}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -108,12 +159,16 @@ export default function PortfolioPage() {
             <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
               {(data?.allocation ?? []).map((a: any, i: number) => (
                 <div key={a.name} className="flex items-center gap-2">
-                  <span 
-                    className="h-3 w-3 rounded-full" 
-                    style={{ backgroundColor: COLORS[i % COLORS.length] }} 
+                  <span
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
                   />
-                  <span className="text-muted-foreground flex-1 truncate">{a.name}</span>
-                  <span className="font-medium text-foreground">{a.value}%</span>
+                  <span className="text-muted-foreground flex-1 truncate">
+                    {a.name}
+                  </span>
+                  <span className="font-medium text-foreground">
+                    {a.value}%
+                  </span>
                 </div>
               ))}
             </div>
@@ -126,13 +181,17 @@ export default function PortfolioPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {(data?.investments ?? []).length === 0 ? (
-              <div className="text-sm text-muted-foreground">Start your investment journey — Check recommendations</div>
+              <div className="text-sm text-muted-foreground">
+                Start your investment journey — Check recommendations
+              </div>
             ) : (
-              (data?.investments ?? []).map((it: any, idx: number) => <InvestmentCard key={idx} item={it} />)
+              (data?.investments ?? []).map((it: any, idx: number) => (
+                <InvestmentCard key={idx} item={it} />
+              ))
             )}
           </CardContent>
         </Card>
       </section>
     </main>
-  )
+  );
 }

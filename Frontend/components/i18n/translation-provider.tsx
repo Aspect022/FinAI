@@ -1,11 +1,18 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import type React from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-type Lang = "en" | "hi"
+type Lang = "en" | "hi";
 
-type Dict = Record<string, Record<Lang, string>>
+type Dict = Record<string, Record<Lang, string>>;
 
 // Minimal shared dictionary. Extend as needed.
 const dict: Dict = {
@@ -31,70 +38,90 @@ const dict: Dict = {
     en: "No transactions yet. Tap + to add your first entry",
     hi: "अभी तक कोई लेन-देन नहीं। पहला जोड़ने के लिए + दबाएं",
   },
-}
+};
 
 type TranslationContextType = {
-  lang: Lang
-  setLang: (l: Lang) => void
-  t: (key: keyof typeof dict) => string
-}
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: (key: keyof typeof dict) => string;
+};
 
-const TranslationContext = createContext<TranslationContextType | null>(null)
+const TranslationContext = createContext<TranslationContextType | null>(null);
 
-export function TranslationProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en")
+export function TranslationProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [lang, setLangState] = useState<Lang>("en");
 
   // Load persisted language
   useEffect(() => {
-    const saved = typeof window !== "undefined" ? (localStorage.getItem("lang") as Lang | null) : null
+    const saved =
+      typeof window !== "undefined"
+        ? (localStorage.getItem("lang") as Lang | null)
+        : null;
     if (saved === "en" || saved === "hi") {
-      setLangState(saved)
+      setLangState(saved);
     }
-  }, [])
+  }, []);
 
   // Listen for global language change events
   useEffect(() => {
     const handler = (e: Event) => {
-      const custom = e as CustomEvent<Lang>
+      const custom = e as CustomEvent<Lang>;
       if (custom.detail === "en" || custom.detail === "hi") {
-        setLang(custom.detail)
+        setLang(custom.detail);
       }
-    }
-    window.addEventListener("finai:set-language", handler as EventListener)
-    return () => window.removeEventListener("finai:set-language", handler as EventListener)
-  }, [])
+    };
+    window.addEventListener("MoneyFyi:set-language", handler as EventListener);
+    return () =>
+      window.removeEventListener(
+        "MoneyFyi:set-language",
+        handler as EventListener
+      );
+  }, []);
 
   const setLang = useCallback((l: Lang) => {
-    setLangState(l)
+    setLangState(l);
     try {
-      localStorage.setItem("lang", l)
+      localStorage.setItem("lang", l);
     } catch {}
     // broadcast to other listeners if any
-    window.dispatchEvent(new CustomEvent<Lang>("finai:language-changed", { detail: l }))
-  }, [])
+    window.dispatchEvent(
+      new CustomEvent<Lang>("MoneyFyi:language-changed", { detail: l })
+    );
+  }, []);
 
   const t = useCallback(
     (key: keyof typeof dict) => {
-      return dict[key]?.[lang] ?? key
+      return dict[key]?.[lang] ?? key;
     },
-    [lang],
-  )
+    [lang]
+  );
 
-  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t])
+  const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 
-  return <TranslationContext.Provider value={value}>{children}</TranslationContext.Provider>
+  return (
+    <TranslationContext.Provider value={value}>
+      {children}
+    </TranslationContext.Provider>
+  );
 }
 
 export function useTranslation() {
-  const ctx = useContext(TranslationContext)
-  if (!ctx) throw new Error("useTranslation must be used within TranslationProvider")
-  return ctx
+  const ctx = useContext(TranslationContext);
+  if (!ctx)
+    throw new Error("useTranslation must be used within TranslationProvider");
+  return ctx;
 }
 
 // Helper for non-React code
 export function setAppLanguage(lang: Lang) {
   try {
-    localStorage.setItem("lang", lang)
+    localStorage.setItem("lang", lang);
   } catch {}
-  window.dispatchEvent(new CustomEvent<Lang>("finai:set-language", { detail: lang }))
+  window.dispatchEvent(
+    new CustomEvent<Lang>("MoneyFyi:set-language", { detail: lang })
+  );
 }

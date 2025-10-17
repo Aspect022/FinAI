@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Wallet2, TrendingUp, LineChart, User, Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LanguageToggle } from "@/components/onboarding/language-toggle"
-import { AddTransactionDialog } from "@/components/transactions/add-transaction-dialog"
+import * as React from "react";
+import { Wallet2, TrendingUp, LineChart, User, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LanguageToggle } from "@/components/onboarding/language-toggle";
+import { AddTransactionDialog } from "@/components/transactions/add-transaction-dialog";
 import {
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { Badge } from "@/components/ui/badge"
-import { RecommendationCard } from "@/components/dashboard/recommendation-card"
+} from "@/components/ui/chart";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Badge } from "@/components/ui/badge";
+import { RecommendationCard } from "@/components/dashboard/recommendation-card";
 
 // Sample data for "Monthly Savings Trend" (last 6 months)
 const savingsData = [
@@ -25,20 +25,20 @@ const savingsData = [
   { month: "Jul", savings: 7500 },
   { month: "Aug", savings: 8100 },
   { month: "Sep", savings: 9000 },
-]
+];
 
 const chartConfig = {
   savings: {
     label: "Savings",
     // color is provided by theme tokens through ChartContainer styles
   },
-}
+};
 
 export default function DashboardClient() {
-  const [language, setLanguage] = React.useState<"en" | "hi">("en")
-  const [txOpen, setTxOpen] = React.useState(false)
+  const [language, setLanguage] = React.useState<"en" | "hi">("en");
+  const [txOpen, setTxOpen] = React.useState(false);
 
-  const greeting = language === "en" ? "Hello, Rajesh" : "नमस्ते, राजेश"
+  const greeting = language === "en" ? "Hello, Rajesh" : "नमस्ते, राजेश";
   const quickStats = [
     {
       title: language === "en" ? "Total Savings" : "कुल बचत",
@@ -55,7 +55,7 @@ export default function DashboardClient() {
       value: "3",
       icon: LineChart,
     },
-  ]
+  ];
 
   const recommendations = [
     {
@@ -72,7 +72,9 @@ export default function DashboardClient() {
       risk: "Low" as const,
       expectedReturn: "6.5-7% p.a.",
       reason:
-        language === "en" ? "Safe, steady returns for short-term goals." : "लघु अवधि लक्ष्यों हेतु सुरक्षित और स्थिर रिटर्न।",
+        language === "en"
+          ? "Safe, steady returns for short-term goals."
+          : "लघु अवधि लक्ष्यों हेतु सुरक्षित और स्थिर रिटर्न।",
     },
     {
       name: "Blue-Chip Equity SIP",
@@ -83,20 +85,28 @@ export default function DashboardClient() {
           ? "Higher long-term growth potential with market risks."
           : "बाजार जोखिम के साथ दीर्घकालिक वृद्धि की अधिक संभावना।",
     },
-  ]
+  ];
 
   return (
     <main className="mx-auto max-w-3xl p-4 md:p-6">
       {/* Header */}
       <header className="flex items-center justify-between gap-3 mb-6">
         <div className="flex items-center gap-3">
-          <span className="font-semibold">FinAI</span>
+          <span className="font-semibold">MoneyFyi</span>
           <span className="hidden md:inline text-muted-foreground">•</span>
           <span className="text-pretty">{greeting}</span>
         </div>
         <div className="flex items-center gap-2">
-          <LanguageToggle language={language} onToggle={() => setLanguage((l) => (l === "en" ? "hi" : "en"))} />
-          <Button size="icon" variant="outline" aria-label="Profile" onClick={() => window.location.href = '/profile'}>
+          <LanguageToggle
+            language={language}
+            onToggle={() => setLanguage((l) => (l === "en" ? "hi" : "en"))}
+          />
+          <Button
+            size="icon"
+            variant="outline"
+            aria-label="Profile"
+            onClick={() => (window.location.href = "/profile")}
+          >
             <User className="h-4 w-4" />
           </Button>
         </div>
@@ -112,7 +122,9 @@ export default function DashboardClient() {
             <Card key={i} className="shadow-sm">
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm text-muted-foreground">{s.title}</CardTitle>
+                  <CardTitle className="text-sm text-muted-foreground">
+                    {s.title}
+                  </CardTitle>
                   <s.icon className="h-4 w-4 text-muted-foreground" />
                 </div>
               </CardHeader>
@@ -134,7 +146,9 @@ export default function DashboardClient() {
             <CardContent className="pt-0">
               <div className="text-2xl font-semibold">3</div>
               <p className="mt-1 text-sm text-muted-foreground">
-                {language === "en" ? "Across SIPs and Deposits" : "एसआईपी और जमा में विभाजित"}
+                {language === "en"
+                  ? "Across SIPs and Deposits"
+                  : "एसआईपी और जमा में विभाजित"}
               </p>
             </CardContent>
           </Card>
@@ -147,7 +161,9 @@ export default function DashboardClient() {
           <h2 id="recs-title" className="text-lg font-semibold text-pretty">
             {language === "en" ? "Your Recommendations" : "आपके सुझाव"}
           </h2>
-          <Badge variant="outline">{language === "en" ? "Personalized" : "व्यक्तिगत"}</Badge>
+          <Badge variant="outline">
+            {language === "en" ? "Personalized" : "व्यक्तिगत"}
+          </Badge>
         </div>
         <div className="grid grid-cols-1 gap-4">
           {recommendations.map((r, idx) => (
@@ -173,9 +189,22 @@ export default function DashboardClient() {
             <ChartContainer config={chartConfig} className="w-full">
               <BarChart data={savingsData}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8} />
-                <YAxis tickFormatter={(v: number) => `₹${v / 1000}k`} tickLine={false} axisLine={false} width={36} />
-                <ChartTooltip cursor={{ fill: "hsl(var(--muted))" }} content={<ChartTooltipContent />} />
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <YAxis
+                  tickFormatter={(v: number) => `₹${v / 1000}k`}
+                  tickLine={false}
+                  axisLine={false}
+                  width={36}
+                />
+                <ChartTooltip
+                  cursor={{ fill: "hsl(var(--muted))" }}
+                  content={<ChartTooltipContent />}
+                />
                 <ChartLegend content={<ChartLegendContent />} />
                 <Bar dataKey="savings" radius={4} />
               </BarChart>
@@ -189,11 +218,13 @@ export default function DashboardClient() {
         <Button
           className="fixed bottom-4 right-4 h-12 w-12 rounded-full shadow-lg"
           size="icon"
-          aria-label={language === "en" ? "Add Cash Transaction" : "नकद लेन-देन जोड़ें"}
+          aria-label={
+            language === "en" ? "Add Cash Transaction" : "नकद लेन-देन जोड़ें"
+          }
         >
           <Plus className="h-5 w-5" />
         </Button>
       </AddTransactionDialog>
     </main>
-  )
+  );
 }

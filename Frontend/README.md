@@ -1,12 +1,12 @@
-# FinAI - Personal Finance Management
+# MoneyFyi - Personal Finance Management
 
-FinAI is an AI-powered personal finance management application that helps users track expenses, plan investments, and achieve financial goals.
+MoneyFyi is an AI-powered personal finance management application that helps users track expenses, plan investments, and achieve financial goals.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://finai.vercel.app)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://MoneyFyi.vercel.app)
 
 ## Overview
 
-FinAI provides users with comprehensive financial management tools including expense tracking, investment recommendations, financial health analysis, and personalized planning.
+MoneyFyi provides users with comprehensive financial management tools including expense tracking, investment recommendations, financial health analysis, and personalized planning.
 
 ## Features
 
