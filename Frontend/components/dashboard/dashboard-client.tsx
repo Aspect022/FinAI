@@ -202,7 +202,7 @@ export default function DashboardClient() {
                   width={36}
                 />
                 <ChartTooltip
-                  cursor={{ fill: "hsl(var(--muted))" }}
+                  cursor={{ fill: "rgb(var(--muted))" }}
                   content={<ChartTooltipContent />}
                 />
                 <ChartLegend content={<ChartLegendContent />} />

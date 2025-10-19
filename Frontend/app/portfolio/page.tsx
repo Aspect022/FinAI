@@ -39,16 +39,16 @@ const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), {
 });
 
 const COLORS = [
-  "#D4F6FF",
-  "#FFFBDE",
-  "#D4F6FF",
-  "#FFFBDE",
-  "#D4F6FF",
-  "#FFFBDE",
-  "#D4F6FF",
-  "#FFFBDE",
-  "#D4F6FF",
-  "#FFFBDE",
+  "rgb(var(--chart-1))",
+  "rgb(var(--chart-2))",
+  "rgb(var(--chart-3))",
+  "rgb(var(--chart-4))",
+  "rgb(var(--chart-5))",
+  "rgb(var(--chart-6))",
+  "rgb(var(--chart-7))",
+  "rgb(var(--chart-8))",
+  "rgb(var(--chart-9))",
+  "rgb(var(--chart-10))",
 ];
 
 export default function PortfolioPage() {
@@ -112,11 +112,8 @@ export default function PortfolioPage() {
           </CardHeader>
           <CardContent className="h-72">
             <ChartContainer
-              config={{
-                value: {
-                  label: "Allocation",
-                },
-                ...(data?.allocation ?? []).reduce(
+              config={
+                (data?.allocation ?? []).reduce(
                   (acc: any, item: any, idx: number) => {
                     acc[item.name] = {
                       label: item.name,
@@ -124,17 +121,24 @@ export default function PortfolioPage() {
                     };
                     return acc;
                   },
-                  {}
-                ),
-              }}
-              className="h-full w-full"
+                  {
+                    value: {
+                      label: "Allocation",
+                    }
+                  }
+                )
+              }
+              className="h-full w-full [&_.recharts-pie-sector]:outline-none [&_.recharts-pie-sector]:focus-visible:outline-ring"
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     dataKey="value"
                     nameKey="name"
-                    data={data?.allocation ?? []}
+                    data={(data?.allocation ?? []).map((item: any, idx: number) => ({
+                      ...item,
+                      fill: COLORS[idx % COLORS.length], // Add fill directly to data
+                    }))}
                     outerRadius={100}
                     innerRadius={60}
                     paddingAngle={2}
@@ -142,9 +146,9 @@ export default function PortfolioPage() {
                   >
                     {(data?.allocation ?? []).map((_: any, idx: number) => (
                       <Cell
-                        key={idx}
+                        key={`cell-${idx}`}
                         fill={COLORS[idx % COLORS.length]}
-                        stroke="hsl(var(--background))"
+                        stroke="rgb(var(--background))"
                         strokeWidth={2}
                       />
                     ))}

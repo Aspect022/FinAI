@@ -35,10 +35,16 @@ export function EducationCard({
           </div>
         ) : state === "in-progress" ? (
           <div>
-            <div className="h-2 w-full rounded bg-muted overflow-hidden">
-              <div className="h-full bg-[var(--chart-2)]" style={{ width: `${progress}%` }} />
+            <div className="h-2 w-full rounded bg-[#f0f3f5] overflow-hidden"> {/* progress_bar.base_bg */}
+              <div 
+                className="h-full rounded" 
+                style={{ 
+                  width: `${progress}%`,
+                  background: `linear-gradient(to right, #ff8a70, #ff6f55)` /* Using orange and a darker orange */
+                }} 
+              />
             </div>
-            <div className="mt-1 text-xs text-muted-foreground">{progress}% completed</div>
+            <div className="mt-1 text-xs text-[#808995]">{progress}% completed</div> {/* progress_bar.label_color */}
           </div>
         ) : (
           <div className="text-xs text-muted-foreground">Not started</div>

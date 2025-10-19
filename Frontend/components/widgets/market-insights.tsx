@@ -14,9 +14,9 @@ type Sector = {
 }
 
 const COLORS: Record<Sector["sentiment"], string> = {
-  Bullish: "bg-emerald-100 text-emerald-700 border-emerald-200",
-  Neutral: "bg-yellow-100 text-yellow-700 border-yellow-200",
-  Bearish: "bg-red-100 text-red-700 border-red-200",
+  Bullish: "bg-success text-white border-success/50",
+  Neutral: "bg-warning text-white border-warning/50", 
+  Bearish: "bg-destructive text-white border-destructive/50",
 }
 
 export function MarketInsights() {

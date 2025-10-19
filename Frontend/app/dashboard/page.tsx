@@ -239,12 +239,30 @@ export default function DashboardPage() {
         <Card className="shadow-sm">
           <CardContent className="pt-6 h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={savingsData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="savings" radius={4} />
+              <BarChart data={savingsData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(47, 53, 66, 0.08)" /> {/* chart_histogram.grid_line */}
+                <XAxis dataKey="month" stroke="rgba(47, 53, 66, 0.55)" /> {/* chart_histogram.axis_text */}
+                <YAxis stroke="rgba(47, 53, 66, 0.55)" /> {/* chart_histogram.axis_text */}
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: '#2f3542', /* chart_histogram.tooltip_bg */
+                    borderColor: '#2f3542',
+                    color: '#ffffff', /* chart_histogram.tooltip_text */
+                    borderRadius: 'var(--radius)',
+                    border: '1px solid #2f3542'
+                  }} 
+                />
+                <Bar 
+                  dataKey="savings" 
+                  radius={[4, 4, 0, 0]} 
+                  fill="url(#colorSavings)" 
+                />
+                <defs>
+                  <linearGradient id="colorSavings" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ff8a70" stopOpacity={0.8}/> {/* Orange start */}
+                    <stop offset="95%" stopColor="#ff6f55" stopOpacity={0.4}/> {/* Darker orange end */}
+                  </linearGradient>
+                </defs>
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

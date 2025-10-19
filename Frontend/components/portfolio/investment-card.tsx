@@ -20,8 +20,8 @@ type Investment = {
 export function InvestmentCard({ item }: { item: Investment }) {
   const isUp = item.direction !== "down"
   const Arrow = isUp ? ArrowUpRight : ArrowDownRight
-  const color = isUp ? "text-[var(--chart-2)]" : "text-red-500"
-  const stroke = isUp ? "var(--chart-2)" : "var(--destructive)"
+  const color = isUp ? "text-[var(--chart-2)]" : "text-[var(--chart-1)]"
+  const stroke = isUp ? "rgb(var(--chart-2))" : "rgb(var(--chart-1))"
 
   return (
     <Card className="bg-card/50 border-border hover:bg-card transition-colors">
